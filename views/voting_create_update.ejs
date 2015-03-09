@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication - Error</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+    </style>
+    
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-ambulance"></span> Voting - Create/Update</h1>
+    </div>
+
+    <div class="row">
+
+        <p>Bienvenido <%= user.local.email %> - <a href="/logout" class="btn btn-default btn-sm">Logout</a></p>
+
+       
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <p>
+                    <a href='/voting_create_update' class="btn btn-default btn-sm"><b>CREAR/EDITAR VOTACIÓN</b></a>
+                </p>
+                <p>
+                    <a href='/voting_list' class="btn btn-default btn-sm">VER VOTACIONES</a>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        
+        <form method="post" action="/voting_create_update">
+
+            <label for='title' class="col-sm-2 control-label">Título</label>
+            <div class="col-sm-4">
+                <input type="text" name='title' id='title' value="">
+            </div>
+            <input type="hidden" name="id_file" id="id_file" value=""> 
+        
+            <label for='comment' class="col-sm-2 control-label">Comentario</label>
+            <div class="col-sm-4">
+                <input type='text' name='comment' id='comment' value="">
+            </div>
+
+            <label for='status' class="col-sm-2 control-label">Status</label>
+            <div class="col-sm-4">
+                <input type='text' name='status' id='status' value="">
+            </div>
+
+            <div class="form-group">
+                <p>Opciones</p>
+
+
+                <label for='optionA' class="col-sm-2 control-label">A:</label>
+                <div class="col-sm-4">
+                    <input type='text' name='optionA' id='optionA' value="">
+                </div>
+
+                <label for='optionB' class="col-sm-2 control-label">B:</label>
+                <div class="col-sm-4">
+                    <input type='text' name='optionB' id='optionB' value="">
+                </div>
+
+                <label for='dateOpen' class="col-sm-2 control-label">Abre</label>
+                <div class="col-sm-4">
+                    <input type="date" name='dateOpen' id='dateOpen' value=''>
+                </div>
+
+                <label for='dateClose' class="col-sm-2 control-label">Cierra</label>
+                <div class="col-sm-4">
+                    <input type="date" name='dateClose' id='dateClose' value=''>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <input type='submit' value='Submit'>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+    <% if (typeof(id) != 'undefined') { %>
+        window.onload = function(){
+        
+            var id_file = "<%= id %>";
+            document.getElementById('id_file').value = id_file;
+ 
+            var title = "<%= title %>";
+            document.getElementById('title').value = title;
+
+            var comment = "<%= comment %>";
+            document.getElementById('comment').value = comment;
+ 
+            var status = "<%= status %>";
+            document.getElementById('status').value = status;
+ 
+            var optionA = "<%= optionA %>";
+            document.getElementById('optionA').value = optionA;
+
+            var optionB = "<%= optionB %>";
+            document.getElementById('optionB').value = optionB;
+
+            var fechaOpen = "<%= date_open %>";
+            document.getElementById('dateOpen').value = fechaOpen;
+
+            var fechaClose = "<%= date_close %>";
+            document.getElementById('dateClose').value = fechaClose;
+                
+         }
+    <% } %>
+    
+</script>
+</body>
+</html>

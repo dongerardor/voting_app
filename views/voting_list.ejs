@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <title>Voting app - List</title>
+
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    jQuery(document).ready(function(){
+
+        var socket = io.connect('http://localhost:8080');//cambiar puerto
+
+        socket.on('lista', function  (data) {
+            console.log('lista');
+            for (var i=0; i<data.length; i++){
+                var tupla = data[i];
+                jQuery("#" + tupla.id).find(".result_a").text(tupla.a);
+                jQuery("#" + tupla.id).find(".result_b").text(tupla.b);
+            }
+            
+        });
+
+        socket.on('outcoming_vote', function  (data) {
+            console.log('outcoming_vote');
+            jQuery("#" + data.id).find(".result_a").text(data.a);
+            jQuery("#" + data.id).find(".result_b").text(data.b);
+        });
+    });
+    </script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-ambulance"></span> VOTACIONES</h1>
+    </div>
+
+    <div class="row">
+
+        <p>Bienvenido <%= user.local.email %> - <a href="/logout" class="btn btn-default btn-sm">Logout</a></p>
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-12">
+            <div class="well">
+                <a href='/voting_create_update'  class="btn btn-default btn-sm">CREAR/EDITAR VOTACIÓN</a>
+                <a href='/voting_list'  class="btn btn-default btn-sm">VER VOTACIONES</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <table>
+                <tr>
+                    <th>Votación ID</th>
+                    <th>Título</th>
+                    <th>Comentario</th>
+                    <th>Status</th>
+                    <th>optionA</th>
+                    <th>optionB</th>
+                    <th>Resultado A</th>
+                    <th>Resultado B</th>
+                    <th>Abre</th>
+                    <th>Cierra</th>
+                    <th>Editar</th>
+                </tr>
+
+                <% for(var i=0; i<voting.length; i++) { %>
+                <tr id="<%= voting[i].id %>">
+                    <td><a href='/voting_vote/<%= voting[i].id %>'><%= voting[i].id %></a></td>
+                    <td><%= voting[i].title %></td>
+                    <td><%= voting[i].comment %></td>
+                    <td><%= voting[i].status %></td>
+                    <td><%= voting[i].optionA %></td>
+                    <td><%= voting[i].optionB %></td>
+                    <td class="result_a"></td>
+                    <td class="result_b"></td>
+                    <td><%= voting[i].date_open %></td>
+                    <td><%= voting[i].date_close %></td>
+                    <td>
+                        <a href='/voting_create_update/<%= voting[i].id %>'>Editar</a>
+                        <br>
+                        <a href='/deletion/<%= voting[i].id %>'>Borrar</a>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+
+            
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
