@@ -121,16 +121,13 @@ module.exports = function(app, passport){
 			var str_status = "--";
 			switch (status){
 				case "0":
-					str_status = "Esperando";
-					break;
-				case "1":
-					str_status = "En proceso";
-					break;
-				case "2":
 					str_status = "Cerrada";
 					break;
+				case "1":
+					str_status = "Abierta";
+					break;
 				default:
-					str_status = "Sin definir";
+					str_status = "Cerrada";
 					break;
 			}
 			return str_status;
@@ -150,8 +147,6 @@ module.exports = function(app, passport){
 						optionB		: voting.optionB,
 						result_a	: voting.result_a,
 						result_b	: voting.result_b,
-						date_open	: voting.date_open,
-						date_close	: voting.date_close
 					}
 				})	
 			};
@@ -214,8 +209,6 @@ module.exports = function(app, passport){
 				optionB		: voting[0].optionB,
 				result_a	: voting[0].result_a,
 				result_b	: voting[0].result_b,
-				date_open	: new Date(voting[0].date_open).toISOString().substring(0, 10),
-				date_close	: new Date(voting[0].date_close).toISOString().substring(0, 10),
 				user		: req.user,	
 			}
 
@@ -244,8 +237,6 @@ module.exports = function(app, passport){
 				optionB		: req.body.optionB,
 				result_a	: 0,
 				result_b	: 0,
-				date_open	: new Date(req.body.dateOpen),
-				date_close	: new Date(req.body.dateClose)
 		   	},
 			{ 	upsert 		: true },
 			function(err){
@@ -292,21 +283,13 @@ module.exports = function(app, passport){
 				optionB		: voting[0].optionB,
 				result_a	: voting[0].result_a,
 				result_b	: voting[0].result_b,
-				date_open	: new Date(voting[0].date_open).toISOString().substring(0, 10),
-				date_close	: new Date(voting[0].date_close).toISOString().substring(0, 10),
 				user		: req.user,	
 			}
 
-			var date_now = new Date();
-			var date_open = new Date(context.date_open);
-			var date_close = new Date(context.date_close);
-
-			if (date_now < date_open){
-				console.log("votacion aun no abierta");
-			}else if(date_now > date_close){
-				console.log("votacion cerrada");
-			}else{
+			if (context.status == 1){
 				res.render('voting_vote', context);
+			}else {
+				res.render('voting_closed', context);
 			}
 		});
 	});

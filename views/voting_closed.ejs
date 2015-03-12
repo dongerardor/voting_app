@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <title>Voting app - List</title>
+
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-ambulance"></span> VOTACION</h1>
+    </div>
+
+    <div class="row">
+
+        <p>Bienvenido <%= user.local.email %> - <a href="/logout" class="btn btn-default btn-sm">Logout</a></p>
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-12">
+            <div class="well">
+                <p>Esta votación está cerrada</p>
+                <a href='/voting_list' class="btn btn-default btn-sm">VER VOTACIONES</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3><%= title %></h3>
+            <p><%= comment %></p>
+            <table>
+                <tr>
+                    <th><%= optionA %></th>
+                    <th><%= optionB %></th>
+                </tr>
+                <tr>
+                    <td id="result_a"><%= result_a %></td>
+                    <td id="result_b"><%= result_b %></td>
+                </tr>  
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

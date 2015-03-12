@@ -11,9 +11,7 @@ var votingSchema = mongoose.Schema({
 	optionA		: String,
 	optionB		: String,
 	result_a	: Number,
-	result_b 	: Number,
-	date_open	: Date,
-	date_close  : Date
+	result_b 	: Number
 });
 
 // create the model for voting and expose it to our app
