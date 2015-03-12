@@ -54,7 +54,7 @@ module.exports = function(passport){
 
 				//check to see if there is already a user with that email
 				if (user){
-					return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+					return done(null, false, req.flash('signupMessage', 'Este email ya esta registrado.'));
 				}else{
 
 					//if there is no user with that email
@@ -72,7 +72,7 @@ module.exports = function(passport){
 					//save the user
 					newUser.save(function(err){
 						if (err){
-							console.log('errror');
+							console.log('Error al salvar nuevo usuario.');
 							console.log(err);
 							console.log('-----------');
 							throw err;
@@ -108,12 +108,12 @@ module.exports = function(passport){
 
 			//if no user is found, return the message
 			if(!user)
-				return done(null, false, req.flash('loginMessage', 'No user foundi.'));
+				return done(null, false, req.flash('loginMessage', 'Usuario no encontrado'));
 				//req.flash is the way to set flashdata using connect-flash
 
 			//if the user is found but the password is wrong
 			if(!user.validPassword(password))
-				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
+				return done(null, false, req.flash('loginMessage', 'Clave inválida.'));
 				// create the loginMessage and save it to session as flashdata
 
 			//all is well, return sucessful user
