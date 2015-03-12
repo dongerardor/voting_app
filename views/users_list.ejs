@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <title>Voting app - List</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-ambulance"></span> VOTACIONES</h1>
+    </div>
+
+    <div class="row">
+
+        <p>Bienvenido <%= user.local.email %> - <a href="/logout" class="btn btn-default btn-sm">Logout</a></p>
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-12">
+            <div class="well">
+                <p>USUARIOS</p>
+                <a href='/voting_create_update'  class="btn btn-default btn-sm">CREAR/EDITAR VOTACIÓN</a>
+                <a href='/voting_list'  class="btn btn-default btn-sm">VER VOTACIONES</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <table>
+                <tr>
+                    <th>User ID</th>
+                    <th>Mail</th>
+                    <th>Rol</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
+                <% for(var i=0; i<users.length; i++) { %>
+                <tr id="<%= users[i].user_id %>">
+                    <td><%= users[i].user_id %></td>
+                    <td><%= users[i].user_email %></td>
+                    <td><%= users[i].user_role %></td>
+                    <td>
+                        <%if (users[i].user_role != "owner") { %>
+                            <a href='/user_delete/<%= users[i].user_id %>'>Eliminar</a>
+                        <% } %>
+                    </td>
+                    <td>
+                        <%if (users[i].user_role == "voter") { %>
+                        <a href='/user_promote/<%= users[i].user_id %>'>Volver líder</a>
+                        <% } %>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

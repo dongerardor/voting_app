@@ -15,10 +15,6 @@
 
         var socket = io.connect('http://localhost:8080');//cambiar puerto
 
-        socket.on('entrance', function  (data) {
-            log_chat_message(data.message);
-        });
-
         socket.on('exit', function  (data) {
             log_chat_message(data.message);
         });
@@ -28,13 +24,6 @@
             log_chat_message(data.message);
             jQuery("#result_a").text(data.a);
             jQuery("#result_b").text(data.b);
-        });
-
-        jQuery('#chat_box').keypress(function(event){
-            if(event.which == 13){
-                socket.emit('chat', {message: jQuery('#chat_box').val()});
-                jQuery('#chat_box').val('');
-            }
         });
 
         jQuery("#vote_A").click(function(event){
@@ -48,37 +37,6 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <style>
-        body        { padding-top:80px; word-wrap:break-word; }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
-        }
-
-        div#chatroom{
-            display: block;
-            height: 300px;
-            border: 1px solid #999;
-            overflow: auto;
-            width: 100%;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        ul#chat_log{
-            list-style: none;
-            position: absolute;
-            bottom: 0px;
-        }
-
-        input#chat_box{
-            width: 99%;
-        }
-    </style>
 
 
 </head>
@@ -119,15 +77,6 @@
                     <td><button id="vote_B">Vote</button></td>
                 </tr>    
             </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div id="chatroom">
-                <ul id="chat_log"></ul>
-            </div>
-            <input type="text" name="chat_box" value="" id="chat_box" placeholder="type to chat..." />
         </div>
     </div>
 

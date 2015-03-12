@@ -67,6 +67,8 @@ module.exports = function(passport){
 					newUser.local.password = newUser.generateHash(password);
 					//newUser.local.password = 'abcd';
 
+					newUser.role = "voter";//default role
+
 					//save the user
 					newUser.save(function(err){
 						if (err){

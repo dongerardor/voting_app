@@ -1,4 +1,12 @@
 //app/routes.js
+var Voting 				= require('./models/voting');
+var ObjectId 			= require('mongodb').ObjectID;
+var temp_voting_records	= require('./models/DB_votes.js')
+var Users 				= require('./models/user.js');
+
+
+
+
 
 module.exports = function(app, passport){
 	//HOME (with login links)
@@ -33,15 +41,62 @@ module.exports = function(app, passport){
 		failureFlash	: true // allow flash messages
 	}));
 
-	//PROFILE SECTION
-	//we will want this protected so you have to be logged in to visit
-	//we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res){
-		res.render('profile.ejs', {
-			user: req.user//get the user out of session and pass to template
-		});
+
+	//=================================================
+	//USERS ADMIN-------------------------------------
+	//=================================================
+
+	app.get('/users_list', allowOwner, function(req, res){
+
+		Users.find({}, function(err, users){
+
+			for (var i in users){
+				//console.log(users[i].local);
+			}
+			
+			var context = {
+				users: users.map(function(user){
+					return {
+						user_id 	: user._id,
+						user_email	: user.local.email,
+						user_role	: user.role
+					}
+				})	
+			};
+
+			context.user = req.user;  //get the user out of session and pass to template
+
+			res.render('users_list.ejs', context);
+		})
 	});
 
+
+	//delete user in mongo file by id
+	app.get('/user_delete/:id', allowOwner, function(req, res){
+		Users.findByIdAndRemove(req.params.id, function (err, doc) {});
+
+		res.redirect('/users_list');
+	});
+
+
+
+	app.get('/user_promote/:id', allowOwner, function(req, res){
+		
+		var o_id = new ObjectId(req.params.id);
+
+		Users.update(
+		{ 	_id			: o_id     	},
+		{	role 		: "leader" 	},
+			function(err){
+				if(err) { 
+					console.error(err.stack);
+					return;
+				}
+			}
+		);
+
+		res.redirect('/users_list');
+	});
 
 
 
@@ -58,23 +113,39 @@ module.exports = function(app, passport){
 	//VOTING ADMIN-------------------------------------
 	//=================================================
 
-	var Voting 				= require('./models/voting');
-	var ObjectId 			= require('mongodb').ObjectID;
-	var temp_voting_records	= require('./models/DB_votes.js')
 
+	app.get('/voting_list', isLoggedIn, function(req, res, next){
 
-	app.get('/voting_list', isLoggedIn, function(req, res){
+		//set the string for "status" of the voting
+		function get_status(status){
+			var str_status = "--";
+			switch (status){
+				case "0":
+					str_status = "Esperando";
+					break;
+				case "1":
+					str_status = "En proceso";
+					break;
+				case "2":
+					str_status = "Cerrada";
+					break;
+				default:
+					str_status = "Sin definir";
+					break;
+			}
+			return str_status;
+		}
+
 
 		Voting.find({},function(err, voting){
 
 			var context = {
-				
 				voting: voting.map(function(voting){
 					return {
 						id 			: voting._id,
 						title		: voting.title,
 						comment		: voting.comment,
-						status		: voting.status,
+						status		: get_status(voting.status),
 						optionA		: voting.optionA,
 						optionB		: voting.optionB,
 						result_a	: voting.result_a,
@@ -87,28 +158,48 @@ module.exports = function(app, passport){
 
 			context.user = req.user;  //get the user out of session and pass to template
 
-			res.render('voting_list.ejs', context);
+			console.log("----");
+			console.log(req.user.role);
+
+			if (req.user.role == 'owner' || req.user.role == 'leader' ){
+				res.render('voting_list.ejs', context);
+			}else{
+				res.render('voting_list_voter.ejs', context);
+			}
+			
 
 		})
 	});
+	
+	app.get('/voting_list', isLoggedIn, function(req, res){
+		res.render('tirar.ejs');
+	});
+
+
+
+
+
 
 
 	//delete mongo file by id
-	app.get('/deletion/:id', isLoggedIn, function(req, res){
+	app.get('/deletion/:id', allowLeader, function(req, res){
 		Voting.findByIdAndRemove(req.params.id, function (err, doc) {});
+
+		temp_voting_records.delete_voting_record_temp(req.params.id);
+		//update 
 		res.redirect('/voting_list');
 	});
 
 
 
-	app.get('/voting_create_update', isLoggedIn, function(req, res){
+	app.get('/voting_create_update', allowLeader, function(req, res){
 		res.render('voting_create_update', {
 			user: req.user, //get the user out of session and pass to template
 		});
 	});
 
 	//edit mongo file
-	app.get('/voting_create_update/:id', isLoggedIn, function(req, res){
+	app.get('/voting_create_update/:id', allowLeader, function(req, res){
 
 		var o_id = new ObjectId(req.params.id);
 
@@ -133,7 +224,7 @@ module.exports = function(app, passport){
 	});
 
 
-	app.post('/voting_create_update', function(req, res){
+	app.post('/voting_create_update', allowLeader, function(req, res){
 
 		var o_id;
 
@@ -182,11 +273,6 @@ module.exports = function(app, passport){
 
 
 
-
-
-
-
-
 	//=================================================
 	//VOTE IO-------------------------------------
 	//=================================================
@@ -194,8 +280,6 @@ module.exports = function(app, passport){
 	app.get('/voting_vote/:id', isLoggedIn, function(req, res){
 
 		var o_id = new ObjectId(req.params.id);
-
-		
 
 		Voting.find({'_id': o_id}, function(err, voting){
 
@@ -213,7 +297,17 @@ module.exports = function(app, passport){
 				user		: req.user,	
 			}
 
-			res.render('voting_vote', context);
+			var date_now = new Date();
+			var date_open = new Date(context.date_open);
+			var date_close = new Date(context.date_close);
+
+			if (date_now < date_open){
+				console.log("votacion aun no abierta");
+			}else if(date_now > date_close){
+				console.log("votacion cerrada");
+			}else{
+				res.render('voting_vote', context);
+			}
 		});
 	});
 
@@ -237,10 +331,42 @@ module.exports = function(app, passport){
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next){
-	//if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
+
+	if (req.isAuthenticated()){
+		//if user is authenticated in the session, carry on
+		return next();	
+	}
+
+	//if they aren't, redirect them to the home page
+	res.redirect('/');
+}
+
+//route middleware to make sure a user is logged in
+function allowOwner(req, res, next){
+
+	//if user is authenticated in the session, and...
+	if (req.isAuthenticated()){
+		//...is an owner, carry on
+		if (req.user.role == 'owner'){
+			return next();
+		}
+	}
 
 	//if they aren't redirect them to the home page
 	res.redirect('/');
 }
+
+//route middleware to make sure a user is logged in
+function allowLeader(req, res, next){
+
+	//if user is authenticated in the session, and...
+	if (req.isAuthenticated()){
+		//...is an owner or leader, carry on
+		if (req.user.role == 'owner' || req.user.role == 'leader' ){
+			return next();
+		}
+	}
+	//if they aren't redirect them to the home page
+	res.redirect('/');
+}
+

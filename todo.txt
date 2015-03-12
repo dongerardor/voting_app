@@ -1,0 +1,4 @@
+
+
+-habilitar la votacion siempre dentro del rango de fechas establecidos
+

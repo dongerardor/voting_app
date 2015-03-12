@@ -42,6 +42,19 @@ function get_voting_record(id){
 	return voting_record;
 }
 
+//delete one element from DB_votes_temp
+function delete_voting_record(id){
+	var delete_index = -1;
+	for (var i = 0; i < DB_votes_temp.length; i++){
+		if(DB_votes_temp[i] !== undefined){
+			if (DB_votes_temp[i].id 	== id){
+				delete_index = i;
+			}
+		}
+	}
+	DB_votes_temp.splice(delete_index, 1);
+}
+
 function add_vote(voting_record, option){
 	voting_record[option]++;//sumo uno a la opcion votada
 	permanent_record_vote_timer(voting_record);
@@ -76,12 +89,8 @@ function permanent_record_vote(record){
 	   	},
 		{ 	upsert 		: true },
 		function(err){
-			if(err) { console.error(err.stack);
-				req.session.flash = {
-	                type: 'danger',
-	                intro: 'Ooops!',
-	                message: 'There was an error processing your request.',
-				};
+			if(err) { 
+				console.error(err.stack);
 				return;
 			}
 		}
@@ -147,6 +156,8 @@ exports.get_voting = function(id){
 }
 
 exports.get_voting_temp = function(){
-
 	return DB_votes_temp;
+}
+exports.delete_voting_record_temp = function(id){
+	return delete_voting_record(id);
 }

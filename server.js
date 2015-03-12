@@ -25,20 +25,14 @@ var chat_room;
 //configuration --------------
 mongoose.connect(configDB.url);//connect to db
 
-//gdr-------
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
 	//init DB_votes_temp with the values in the db
 	temp_voting_records.init_DB_votes_temp();
-	//console.log("====== ======== =======");
-	//console.log(temp_voting_records.get_voting_temp());
 });
-//gdr-------
 
 require('./config/passport')(passport); //pass passport for configuration
-
-
 
 //set up our express application
 app.use(morgan('dev'));//log every request to the console
@@ -68,8 +62,6 @@ var server = app.listen(port, function() {
 chat_room 		= io.listen(server);
 
 chat_room.sockets.on('connection', function (socket) {
-
-	socket.emit('entrance', {message: 'Pronto para votar!'});
 
 	socket.emit('lista', temp_voting_records.get_voting_temp());
 
