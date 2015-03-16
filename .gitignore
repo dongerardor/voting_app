@@ -35,3 +35,8 @@ node_modules
 *.jpeg
 *.gif
 *.png
+
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env

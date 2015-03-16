@@ -1,7 +1,7 @@
 {
   "name": "auth1",
   "version": "1.0.0",
-  "description": "Autenticacion prueba 1",
+  "description": "Votapp v1",
   "main": "server.js",
   "dependencies": {
     "bcrypt-nodejs": "latest",
@@ -25,6 +25,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "0.10.x"
   },
   "author": "gerardor",
   "license": "ISC"
