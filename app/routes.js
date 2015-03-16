@@ -103,12 +103,6 @@ module.exports = function(app, passport){
 
 
 
-
-
-
-
-
-
 	//=================================================
 	//VOTING ADMIN-------------------------------------
 	//=================================================
@@ -153,9 +147,6 @@ module.exports = function(app, passport){
 
 			context.user = req.user;  //get the user out of session and pass to template
 
-			console.log("----");
-			console.log(req.user.role);
-
 			if (req.user.role == 'owner' || req.user.role == 'leader' ){
 				res.render('voting_list.ejs', context);
 			}else{
@@ -165,11 +156,6 @@ module.exports = function(app, passport){
 
 		})
 	});
-	
-	app.get('/voting_list', isLoggedIn, function(req, res){
-		res.render('tirar.ejs');
-	});
-
 
 
 

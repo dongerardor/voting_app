@@ -1,0 +1,36 @@
+    <div class="row">
+        <div class="col-sm-12">
+
+            <table>
+                <tr>
+                    <th>Votación ID</th>
+                    <th>Título</th>
+                    <th>Comentario</th>
+                    <th>Status</th>
+                    <th>optionA</th>
+                    <th>optionB</th>
+                    <th>Resultado A</th>
+                    <th>Resultado B</th>
+                    <th>Editar</th>
+                </tr>
+
+                <% for(var i=0; i<voting.length; i++) { %>
+                <tr id="<%= voting[i].id %>">
+                    <td><a href='/voting_vote/<%= voting[i].id %>'><%= voting[i].id %></a></td>
+                    <td><%= voting[i].title %></td>
+                    <td><%= voting[i].comment %></td>
+                    <td><%= voting[i].status %></td>
+                    <td><%= voting[i].optionA %></td>
+                    <td><%= voting[i].optionB %></td>
+                    <td><h1 class="result_a"></h1></td>
+                    <td class="result_b"></td>
+                    <td>
+                        <a href='/voting_create_update/<%= voting[i].id %>'>Editar</a>
+                        <br>
+                        <a href='/deletion/<%= voting[i].id %>'>Borrar</a>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+    </div>

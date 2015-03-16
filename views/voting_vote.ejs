@@ -37,21 +37,88 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+
+.well {
+  min-height: 80px;
+}
+.well a{
+    width: 180px;
+}
+
+.voting_panel {
+    position: relative;
+    margin-bottom: 1em;
+    padding: 1em;
+    width: 50%;
+    border: 1px solid black;
+    float: left;
+}
+
+.voting_panel .btn {
+    margin: 0 auto;
+    display: block;
+    float: none;
+    width: 150px;
+    height: 150px;
+    background: orange;
+    font-size: 3em;
+}
+
+.voting_panel .result{
+    position: absolute;
+    right: 10px;
+    top: 1em;
+    font-size: 6.5em;
+}
+
+
+.btn{
+    width: 120px;
+    float: right;
+    margin-left: .5em;
+    margin-top: .5em;
+}
+#btn_vote{
+    float: left;
+    width: 200px;
+}
+
+hr.clear{
+    margin-top: 2em;
+    clear: both;
+    border: 0;
+}
+#footer {
+  
+  background-color: #f5f5f5;
+  height: 5em;
+}
+#footer p{
+    padding-top: 1em;
+    text-align: center;
+}
+
+
+</style>
 
 
 </head>
 <body>
 <div class="container">
 
-    <div class="page-header text-center">
-        <h1><span class="fa fa-ambulance"></span> VOTACION</h1>
+   <div class="row">
+        <p>Bienvenido <%= user.local.email %></p>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-plus-square"></span> VOTACION</h1>
+    </div>
+
 
     <div class="row">
 
-        <p>Bienvenido <%= user.local.email %> - <a href="/logout" class="btn btn-default btn-sm">Logout</a></p>
-
-        <!-- LOCAL INFORMATION -->
         <div class="col-sm-12">
             <div class="well">
                 <a href='/voting_list'  class="btn btn-default btn-sm">VER VOTACIONES</a>
@@ -63,23 +130,26 @@
         <div class="col-sm-12">
             <h3><%= title %></h3>
             <p><%= comment %></p>
-            <table>
-                <tr>
-                    <th>Opción A</th>
-                    <th>Opción B</th>
-                </tr>
-                <tr>
-                    <td id="result_a"><%= result_a %></td>
-                    <td id="result_b"><%= result_b %></td>
-                </tr>
-                <tr>
-                    <td><button id="vote_A">Vote</button></td>
-                    <td><button id="vote_B">Vote</button></td>
-                </tr>    
-            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div class="voting_panel">
+                <h4>Opción A</h4>
+                <p class="result" id="result_a"><%= result_a %></p>
+                <button class="btn" id="vote_A">Vote</button>
+            </div>
+            <div class="voting_panel">
+                <h4>Opción B</h4>
+                <p class="result" id="result_b"><%= result_b %></p>
+                <button class="btn" id="vote_B">Vote</button>
+            </div>
         </div>
     </div>
 
+    <div class="row">
+        <div id="footer"><p>VOTAPP</p></div>
+    </div>
 </div>
 </body>
 </html>
